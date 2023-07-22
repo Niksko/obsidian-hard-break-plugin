@@ -10,6 +10,7 @@ specifiers:
   esbuild: 0.17.3
   eslint: ^8.45.0
   obsidian: latest
+  prettier: ^3.0.0
   tslib: 2.4.0
   typescript: 4.7.4
 
@@ -25,6 +26,7 @@ devDependencies:
   builtin-modules: 3.3.0
   esbuild: 0.17.3
   obsidian: 1.2.8_qhkmntjgjdxkyszk3etqrkzvlm
+  prettier: 3.0.0
   tslib: 2.4.0
   typescript: 4.7.4
 
@@ -1013,6 +1015,12 @@ packages:
   /prelude-ls/1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  /prettier/3.0.0:
+    resolution: {integrity: sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /punycode/2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
