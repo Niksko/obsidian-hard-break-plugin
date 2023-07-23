@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
-	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"name": "obsidian-hard-break-plugin",
+	"version": "0.0.1",
+	"description": "A basic Obsidian plugin that keeps Markdown readable by hard breaking long lines at a certain line length.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
@@ -10,8 +10,10 @@
 		"lint": "eslint main.ts && prettier . --check",
 		"format": "prettier . --write"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"obsidian-plugin"
+	],
+	"author": "Nik Skoufis",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
