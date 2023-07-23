@@ -13,7 +13,7 @@ interface HardBreakPluginSettings {
 }
 
 const DEFAULT_SETTINGS: HardBreakPluginSettings = {
-	hardWrapLineLength: 50,
+	hardWrapLineLength: 120,
 };
 
 const shouldHardWrap = (
