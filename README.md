@@ -18,6 +18,9 @@ What's working:
 
 What still needs work (in order of priority):
 
+* Ideally when it creates a break it should indent to the same indent as the current block.
+  For example, if you're writing a list and it breaks, it should place any word you were in the middle of on the 
+  next line with the matching indentation.
 * If you want to override the line break by going to the start of the newly broken line and backspacing, this won't 
   work if you immediately backspace.
   This is because since we trimmed the whitespace, your line length is now back at the threshold for breaking.
