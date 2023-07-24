@@ -18,6 +18,7 @@ What's working:
 
 What still needs work (in order of priority):
 
+* Add in some unit tests that exercise the indentation logic
 * Ideally when it creates a break it should indent to the same indent as the current block.
   For example, if you're writing a list and it breaks, it should place any word you were in the middle of on the 
   next line with the matching indentation.
