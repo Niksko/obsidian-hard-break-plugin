@@ -3,6 +3,7 @@ import {
 	CharCategory,
 	EditorSelection,
 	EditorState,
+	Line,
 	SelectionRange,
 	TransactionSpec,
 } from "@codemirror/state";
@@ -66,9 +67,25 @@ const findWhitespaceBefore = (
 	return EditorSelection.range(leftmostWhitespace - 1, pos);
 };
 
-const createWrapLineTransaction = (
-	state: EditorState,
-): TransactionSpec => {
+const getStartOfLineWhitespace = (line: Line): string => {
+	/* Regex explanation
+	   First, match any whitespace
+	   Then, match either:
+	   * `* ` indicating an unordered list
+	   * `- ` also indicating an unordered list
+	   * `1. ` indicating an ordered list
+	   Then match any other whitespace
+	 */
+	const startOfLine = line.text.match(/^\s*(([-*]|(\d+\.)) )?\s*/g);
+	if (startOfLine === null) {
+		return "";
+	}
+
+	// Replace non-whitespace characters with spaces
+	return startOfLine[0].replace(/[-*\d.]/, " ");
+};
+
+const createWrapLineTransaction = (state: EditorState): TransactionSpec => {
 	const newSelectionHead =
 		state.selection.ranges[state.selection.mainIndex].head;
 	const wordSelectionAtEndOfLine = state.wordAt(newSelectionHead);
@@ -77,35 +94,49 @@ const createWrapLineTransaction = (
 		// * Remove the word at the end of the line
 		// * Remove any preceding whitespace
 		// * Insert a line break
+		// * Insert any required indentation
 		// * Add the removed word on the new line (after the line break)
 		const wordFrom = wordSelectionAtEndOfLine.from;
 		const wordTo = wordSelectionAtEndOfLine.to;
 		const wordAtEndOfLine = state.sliceDoc(wordFrom, wordTo);
-		const precedingWhitespace = findWhitespaceBefore(state, wordFrom);
+		const endOfLineWhitespace = findWhitespaceBefore(state, wordFrom);
+		const line = state.doc.lineAt(newSelectionHead);
+		// TODO: We may want to turn this value into the native intent character
+		//  i.e. if we get back 6 whitespace, we can turn that in to 3 tabs if the tabsize is 2
+		const startOfLineWhitespace = getStartOfLineWhitespace(line);
 		const changes = [
 			{
 				from: wordFrom,
 				to: wordTo,
 			},
 			{
-				from: precedingWhitespace.anchor,
+				from: endOfLineWhitespace.anchor,
 				to: wordTo,
 			},
 			{
-				from: precedingWhitespace.anchor,
-				to: precedingWhitespace.anchor,
+				from: endOfLineWhitespace.anchor,
+				to: endOfLineWhitespace.anchor,
 				insert: state.lineBreak,
 			},
 			{
-				from: precedingWhitespace.anchor + 1,
-				to: precedingWhitespace.anchor + 1,
+				from: endOfLineWhitespace.anchor + 1,
+				to: endOfLineWhitespace.anchor + 1,
+				insert: startOfLineWhitespace,
+			},
+			{
+				from: endOfLineWhitespace.anchor + startOfLineWhitespace.length,
+				to: endOfLineWhitespace.anchor + startOfLineWhitespace.length,
 				insert: wordAtEndOfLine,
 			},
 		];
 		return {
 			changes,
 			selection: {
-				anchor: precedingWhitespace.anchor + 1 + wordAtEndOfLine.length,
+				anchor:
+					endOfLineWhitespace.anchor +
+					startOfLineWhitespace.length +
+					wordAtEndOfLine.length +
+					1,
 			},
 		};
 	} else {
